@@ -1,0 +1,114 @@
+name: Autograding Tests
+'on':
+- push
+- repository_dispatch
+permissions:
+  checks: write
+  actions: read
+  contents: read
+jobs:
+  run-autograding-tests:
+    runs-on: ubuntu-latest
+    if: github.actor != 'github-classroom[bot]'
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    - name: test_clear
+      id: test_clear
+      uses: classroom-resources/autograding-io-grader@v1
+      with:
+        test-name: test_clear
+        setup-command: cp ./Vector.cpp .test/; cp ./Vector.hpp .test/
+        command: g++ .test/*.cpp && ./a.out
+        input: ''
+        expected-output: |-
+          [ 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50 51 52 53 54 55 56 57 58 59 60 61 62 63 64 65 66 67 68 69 70 71 72 73 74 75 76 77 78 79 80 81 82 83 84 85 86 87 88 89 90 91 92 93 94 95 96 97 98 99 ]
+          10
+          [ ]
+        comparison-method: contains
+        timeout: 10
+        max-score: 10
+    - name: test_insert
+      id: test_insert
+      uses: classroom-resources/autograding-io-grader@v1
+      with:
+        test-name: test_insert
+        setup-command: cp ./Vector.cpp .test/; cp ./Vector.hpp .test/
+        command: g++ .test/*.cpp && ./a.out
+        input: ''
+        expected-output: "[ 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 ]"
+        comparison-method: contains
+        timeout: 10
+        max-score: 10
+    - name: test_push_front
+      id: test_push_front
+      uses: classroom-resources/autograding-io-grader@v1
+      with:
+        test-name: test_push_front
+        setup-command: cp ./Vector.cpp .test/; cp ./Vector.hpp .test/
+        command: g++ .test/*.cpp && ./a.out
+        input: ''
+        expected-output: "[ -18 -17 -16 -15 -14 -13 -12 -11 -10 -9 -8 -7 -6 -5 -4
+          -3 -2 -1 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 ]"
+        comparison-method: contains
+        timeout: 10
+        max-score: 5
+    - name: test_at
+      id: test_at
+      uses: classroom-resources/autograding-io-grader@v1
+      with:
+        test-name: test_at
+        setup-command: cp ./Vector.cpp .test/; cp ./Vector.hpp .test/
+        command: g++ .test/*.cpp && ./a.out
+        input: ''
+        expected-output: |-
+          -18 20
+          -17 19
+          -16 18
+          -15 17
+          -14 16
+          -13 15
+          -12 14
+          -11 13
+          -10 12
+          -9 11
+          -8 10
+          -7 9
+          -6 8
+          -5 7
+          -4 6
+          -3 5
+          -2 4
+          -1 3
+          1 2
+          2 1
+          3 -1
+          4 -2
+          5 -3
+          6 -4
+          7 -5
+          8 -6
+          9 -7
+          10 -8
+          11 -9
+          12 -10
+          13 -11
+          14 -12
+          15 -13
+          16 -14
+          17 -15
+          18 -16
+          19 -17
+          20 -18
+        comparison-method: contains
+        timeout: 10
+        max-score: 5
+    - name: Autograding Reporter
+      uses: classroom-resources/autograding-grading-reporter@v1
+      env:
+        TEST_CLEAR_RESULTS: "${{steps.test_clear.outputs.result}}"
+        TEST_INSERT_RESULTS: "${{steps.test_insert.outputs.result}}"
+        TEST_PUSH_FRONT_RESULTS: "${{steps.test_push_front.outputs.result}}"
+        TEST_AT_RESULTS: "${{steps.test_at.outputs.result}}"
+      with:
+        runners: test_clear,test_insert,test_push_front,test_at
