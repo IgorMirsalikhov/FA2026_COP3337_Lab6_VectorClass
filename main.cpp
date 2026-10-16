@@ -1,9 +1,9 @@
-#include "MyVector.hpp"
+#include "Vector.hpp"
 #include <iostream>
 
 int main(void) {
-    // Create a MyVector object dynamically
-    MyVector *mvPtr = new MyVector(10);
+    // Create a Vector object dynamically
+    Vector *mvPtr = new Vector(10);
 
     for (int i = 0; i < 100; i++) {
         mvPtr->push_back(i);
